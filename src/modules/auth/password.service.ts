@@ -1,9 +1,11 @@
 import argon2 from "argon2";
-import { injectable } from "tsyringe";
 
-@injectable()
 export class PasswordService {
-  async hashPassword(password: string): Promise<string> {
+  hashPassword = async (password: string) => {
     return await argon2.hash(password);
-  }
+  };
+
+  comparePassword = async (plainPassword: string, hashedPassword: string) => {
+    return await argon2.verify(hashedPassword, plainPassword);
+  };
 }
