@@ -5,6 +5,7 @@ import { container } from "tsyringe";
 import { PORT } from "./config";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { SampleRouter } from "./modules/sample/sample.router";
+import { AuthRouter } from "./modules/auth/auth.router";
 export default class App {
   public app: Express;
 
@@ -22,8 +23,12 @@ export default class App {
 
   private routes() {
     const sampleRouter = container.resolve(SampleRouter);
-    this.app.use("/samples", sampleRouter.getRouter()); // pastikan ada .router
+    const authRouter = container.resolve(AuthRouter); // ✅ tidak konflik lagi
+  
+    this.app.use("/samples", sampleRouter.getRouter());
+    this.app.use("/auth", authRouter.getRouter());
   }
+  
 
   private handleError() {
     this.app.use(errorMiddleware);
